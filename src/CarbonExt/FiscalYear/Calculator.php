@@ -41,19 +41,15 @@ class Calculator {
 
         /* FY is based on the -end- of the FY, thus we will work backward to determine if we need to 'rollup' the FY
         from the input year */
-
         $fyStart = Carbon::create($dt->year, $this->month, $this->day, 0, 0, 0);
-
         $fyEnd = clone $fyStart;
-        $fyEnd->addDays(364); /* Set to last date */
 
-        if ($dt->between($fyStart, $fyEnd, TRUE)) {
-            $FY = $fyEnd->year;
-        } else {
+        $fyEnd->addYear()->subDay();
+
+        if (!$dt->between($fyStart, $fyEnd, TRUE)) {
             $fyEnd->year($dt->year);
-            $FY = $dt->year;
         }
 
-        return Carbon::create($FY, $this->month, $this->day);
+        return $fyEnd;
     }
 }
