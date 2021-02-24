@@ -15,7 +15,7 @@
         "DateTime"
     ],
     "require": {
-        "nesbot/carbon": "~1.0",
+        "nesbot/carbon": "~1.0|~2.0",
         "php": ">=5.3.3"
     },
 
