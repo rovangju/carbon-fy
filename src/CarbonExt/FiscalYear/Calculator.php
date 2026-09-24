@@ -34,6 +34,34 @@ class Calculator {
     }
 
     /**
+     * Get the FY start date
+     *
+     * @param Carbon $dt Date to determine FY for
+     *
+     * @return Carbon Carbon instance set to the start of the FY for the input
+     */
+    public function getStart(?Carbon $dt = null): Carbon {
+
+        if ($dt === null) {
+            $dt = new Carbon();
+        }
+
+        /* Disregard times (work on a copy so the input is not mutated) */
+        $dt = clone $dt;
+        $dt->setTime(0, 0, 0);
+
+        $fyStart = Carbon::create($dt->year, $this->month, $this->day, 0, 0, 0);
+
+        /* If the input date precedes the FY start of its calendar year, it belongs to the FY that began the
+        prior year */
+        if ($dt->lt($fyStart)) {
+            $fyStart->setYear($dt->year - 1);
+        }
+
+        return $fyStart;
+    }
+
+    /**
      * Get the FY end date
      *
      * @param Carbon $dt Date to determine FY for
@@ -41,25 +69,6 @@ class Calculator {
      * @return Carbon Carbon instance set to the end of the FY for the input
      */
     public function get(?Carbon $dt = null): Carbon {
-
-        if ($dt === null) {
-            $dt = new Carbon();
-        }
-
-        /* Disregard times */
-        $dt->setTime(0, 0, 0);
-
-        /* FY is based on the -end- of the FY, thus we will work backward to determine if we need to 'rollup' the FY
-        from the input year */
-        $fyStart = Carbon::create($dt->year, $this->month, $this->day, 0, 0, 0);
-        $fyEnd = clone $fyStart;
-
-        $fyEnd->addYear()->subDay();
-
-        if (!$dt->between($fyStart, $fyEnd, true)) {
-            $fyEnd->setYear($dt->year);
-        }
-
-        return $fyEnd;
+        return (clone $this->getStart($dt))->addYear()->subDay();
     }
 }

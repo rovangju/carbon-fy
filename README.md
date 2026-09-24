@@ -26,7 +26,10 @@ use CarbonExt\FiscalYear\Calculator;
 
 $c = new Calculator(7, 1); /* FY starts on July 1 */
 
-$c->get(new Carbon('2015-01-01')); /* 2015-06-30 */
+$c->get(new Carbon('2015-01-01')); /* 2015-06-30, the FY end date */
 $c->get(new Carbon('2015-07-01')); /* 2016-06-30 */
+
+$c->getStart(new Carbon('2015-01-01')); /* 2014-07-01, the FY start date */
+$c->getStart(new Carbon('2015-07-01')); /* 2015-07-01 */
 
 ```
