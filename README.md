@@ -1,11 +1,16 @@
 # Carbon Extension: Fiscal Year (FY)
 
-[![Build Status](https://travis-ci.org/rovangju/carbon-fy.svg?branch=master)](https://travis-ci.org/rovangju/carbon-fy)
+[![Tests](https://github.com/rovangju/carbon-fy/actions/workflows/tests.yml/badge.svg)](https://github.com/rovangju/carbon-fy/actions/workflows/tests.yml)
 
 -------
 
 Don't reinvent the wheel on that funky date logic to determine what fiscal year it is, or what fiscal year something happened in. 
 This simple package has your back!
+
+## Requirements
+
+- PHP 8.1 or later
+- Carbon 3
 
 
 ## Overview
@@ -21,7 +26,7 @@ use CarbonExt\FiscalYear\Calculator;
 
 $c = new Calculator(7, 1); /* FY starts on July 1 */
 
-$c->get(new Carbon('2015-01-01')); /* 2015-06-29 */
-$c->get(new Carbon('2015-07-01')); /* 2016-06-29 */
+$c->get(new Carbon('2015-01-01')); /* 2015-06-30 */
+$c->get(new Carbon('2015-07-01')); /* 2016-06-30 */
 
 ```

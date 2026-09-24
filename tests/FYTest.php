@@ -7,6 +7,7 @@
 
 use CarbonExt\FiscalYear\Calculator;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FYTest extends TestBase {
 
@@ -20,10 +21,9 @@ class FYTest extends TestBase {
             7,
             $this->fresh->month
         );
-
     }
 
-    public function data() {
+    public static function data(): array {
         return array(
 
             /* Within the actual year year */
@@ -42,9 +42,7 @@ class FYTest extends TestBase {
         );
     }
 
-    /**
-     * @dataProvider data
-     */
+    #[DataProvider('data')]
     public function testGet($fyM, $fyD, $test, $expected) {
 
         $fy = new Calculator($fyM, $fyD);
@@ -53,11 +51,10 @@ class FYTest extends TestBase {
             new Carbon($test)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $dt->format('Y-m-d')
         );
-
     }
 
 }

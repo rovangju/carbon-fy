@@ -9,18 +9,28 @@ namespace CarbonExt\FiscalYear;
 
 use Carbon\Carbon;
 
+/**
+ * An extension that utilizes the Carbon DateTime object to determine the fiscal year (FY) for a given date.
+ */
 class Calculator {
 
-    public $month;
-    public $day;
+    /**
+     * @var int FY Start month
+     */
+    public int $month;
+
+    /**
+     * @var int FY start day
+     */
+    public int $day;
 
     /**
      * @param int $m FY Start month
      * @param int $d FY start day
      */
-    public function __construct($m = 1, $d = 1) {
-        $this->month = (int)$m;
-        $this->day = (int)$d;
+    public function __construct(int $m = 1, int $d = 1) {
+        $this->month = $m;
+        $this->day = $d;
     }
 
     /**
@@ -30,9 +40,9 @@ class Calculator {
      *
      * @return Carbon Carbon instance set to the end of the FY for the input
      */
-    public function get(Carbon $dt = NULL) {
+    public function get(?Carbon $dt = null): Carbon {
 
-        if (!$dt) {
+        if ($dt === null) {
             $dt = new Carbon();
         }
 
@@ -46,8 +56,8 @@ class Calculator {
 
         $fyEnd->addYear()->subDay();
 
-        if (!$dt->between($fyStart, $fyEnd, TRUE)) {
-            $fyEnd->year($dt->year);
+        if (!$dt->between($fyStart, $fyEnd, true)) {
+            $fyEnd->setYear($dt->year);
         }
 
         return $fyEnd;
