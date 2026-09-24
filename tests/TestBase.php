@@ -9,13 +9,13 @@ require __DIR__.'/../vendor/autoload.php';
 
 use CarbonExt\FiscalYear\Calculator;
 
-class TestBase extends PHPUnit_Framework_TestCase {
+class TestBase extends PHPUnit\Framework\TestCase {
     /**
      * @var Calculator
      */
     protected $fresh;
 
-    protected function setUp() {
+    protected function setUp(): void {
         date_default_timezone_set('America/Chicago');
         $this->fresh = new Calculator(7, 1);
     }

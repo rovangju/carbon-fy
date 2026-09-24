@@ -7,6 +7,7 @@
 
 use CarbonExt\FiscalYear\Calculator;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FYTest extends TestBase {
 
@@ -20,10 +21,9 @@ class FYTest extends TestBase {
             7,
             $this->fresh->month
         );
-
     }
 
-    public function data() {
+    public static function data(): array {
         return array(
 
             /* Within the actual year year */
@@ -42,9 +42,7 @@ class FYTest extends TestBase {
         );
     }
 
-    /**
-     * @dataProvider data
-     */
+    #[DataProvider('data')]
     public function testGet($fyM, $fyD, $test, $expected) {
 
         $fy = new Calculator($fyM, $fyD);
@@ -53,11 +51,66 @@ class FYTest extends TestBase {
             new Carbon($test)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $dt->format('Y-m-d')
         );
+    }
 
+    public static function startData(): array {
+        return array(
+
+            /*    M, D, 'test value', 'expected  ' */
+            array(1, 1, '2015-01-01', '2015-01-01'),
+            array(1, 1, '2015-12-31', '2015-01-01'),
+
+            array(7, 1, '2015-01-01', '2014-07-01'),
+            array(7, 1, '2015-06-30', '2014-07-01'),
+            array(7, 1, '2015-07-01', '2015-07-01'),
+            array(7, 1, '2015-12-31', '2015-07-01'),
+
+            array(12, 30, '2015-12-31', '2015-12-30'),
+            array(12, 30, '2015-01-01', '2014-12-30')
+        );
+    }
+
+    #[DataProvider('startData')]
+    public function testGetStart($fyM, $fyD, $test, $expected) {
+
+        $fy = new Calculator($fyM, $fyD);
+
+        $dt = $fy->getStart(
+            new Carbon($test)
+        );
+
+        $this->assertSame(
+            $expected,
+            $dt->format('Y-m-d')
+        );
+    }
+
+    public function testGetDoesNotMutateInput() {
+
+        $input = new Carbon('2015-03-15 13:45:30');
+
+        $this->fresh->get($input);
+
+        $this->assertSame(
+            '2015-03-15 13:45:30',
+            $input->format('Y-m-d H:i:s')
+        );
+    }
+
+    public function testGetStartDoesNotMutateInput() {
+
+        $input = new Carbon('2015-03-15 13:45:30');
+
+        $this->fresh->getStart($input);
+
+        $this->assertSame(
+            '2015-03-15 13:45:30',
+            $input->format('Y-m-d H:i:s')
+        );
     }
 
 }
